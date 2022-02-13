@@ -1,0 +1,67 @@
+class CarSystem {
+  //CarSystem - 
+  //Her kan man lave en generisk alogoritme, der skaber en optimal "hjerne" til de forhåndenværende betingelser
+  
+  ArrayList<CarController> CarControllerList  = new ArrayList<CarController>();
+
+  CarSystem(int populationSize) {
+    for (int i=0; i<populationSize; i++) { 
+      CarController controller = new CarController();
+      CarControllerList.add(controller);
+    }
+  }
+
+  void GA(int populationSize)
+  {
+   float bestFitness = -10000000;
+    int best = -1;
+    for(int i = 0; i < CarControllerList.size(); i++)
+   {
+     if(CarControllerList.get(i).GetFitness() >= bestFitness)
+     {
+       bestFitness = CarControllerList.get(i).GetFitness();
+       best = i;
+       
+     }
+   }
+    
+    
+    
+    println("Best fitness: " + CarControllerList.get(best).GetFitness());
+    
+    CarController bestCar = new CarController(CarControllerList.get(best));
+    CarControllerList = new ArrayList<CarController>();
+    
+    CarControllerList.add(bestCar);
+    
+    
+    
+    
+    for(int i = 0; i < populationSize - 1; i++)
+    {
+      CarController mutated = new CarController(bestCar);
+     
+      if(random(0,1) > 0.2)
+      {
+        mutated.hjerne.Mutate();
+      }
+      
+      
+      CarControllerList.add(mutated);
+    }
+   
+    
+  }
+
+  void updateAndDisplay() {
+    //1.) Opdaterer sensorer og bilpositioner
+    for (CarController controller : CarControllerList) {
+      controller.update();
+    }
+
+    //2.) Tegner tilsidst - så sensorer kun ser banen og ikke andre biler!
+    for (CarController controller : CarControllerList) {
+      controller.display();
+    }
+  }
+}
